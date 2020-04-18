@@ -6,18 +6,35 @@
     <div th:replace="fragments/stylesAndScripts::head-styling"></div>
 </head>
 <body>
+	<div th:replace="fragments/navbar"></div>
     <div class="container">
-    <div th:replace="fragments/navbar"></div>
+    	<ul class="nav nav-tabs">
+		    <li role="presentation" th:classappend="${filter == 'all' ? 'active' : '' }">
+		        <a href="/tweets">All</a></li>
+		    <li role="presentation" th:classappend="${filter == 'following' ? 'active' : '' }">
+		        <a href="/tweets?filter=following">Following</a></li>
+		</ul><br/>
         <h2>Tweets</h2>
-        <h3 th:if="${tweetList.empty}">No Tweets Available</h3>
+        <div th:if="${#lists.isEmpty(tweetList) and filter == 'all'}">
+    		<h3>No tweets have been created yet</h3>
+		</div>
+		<div th:if="${#lists.isEmpty(tweetList) and filter == 'following'}">
+    		<h3>No tweets have been created by your followers</h3>
+		</div>
         
         <div th:each="tweet:${tweetList}">
         	<div class="list-group">
 	            <h5 class="list-group-item">@<span  th:text="${tweet.user.username}"></span>
-	            <small><span th:text="${#dates.format(tweet.createdAt, 'M/d/yy')}"></span></small></h5>
+	            <small th:text="${tweet.date}"></small></h5>
 	           <div class="list-group-item"> <p th:utext="${tweet.message}"></p></div>
             </div>
     	</div>
+    	<div th:if="${#lists.isEmpty(tweetList) and filter == 'all'}">
+    		<h3>No tweets have been created yet</h3>
+		</div>
+		<div th:if="${#lists.isEmpty(tweetList) and filter == 'following'}">
+    		<h3>No tweets have been created by the users you are  following</h3>
+		</div>
     </div>
     <div th:replace="fragments/stylesAndScripts::body-scripts"></div>
 </body>
